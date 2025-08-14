@@ -38,7 +38,7 @@ All Python dependencies are managed by **`uv`** via a single `pyproject.toml` fi
 - **Backend Framework:** Django 5.2 LTS
 - **API Framework:** Django REST Framework (DRF)
 - **Database:** ParadeDB (PostgreSQL 17 with search & analytics extensions)
-- **Cache:** Memcached
+- **Cache:** Redis (valkey 7)
 - **Task Queue:** Celery + RabbitMQ (as the message broker)
 - **Python Tooling:** `uv` (package manager), `ruff` (linter/formatter), `mypy` (type checker), `pytest` (testing)
 - **Configuration:** `django-environ` (for managing settings via environment variables)
