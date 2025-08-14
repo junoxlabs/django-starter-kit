@@ -31,6 +31,7 @@ dependencies = [
     "boto3>=1.30.0",
     "requests>=2.31.0",
     "amqp>=5.1.0",
+    "channels-redis>=4.0.0",
 ]
 [tool.ruff]
 line-length = 88

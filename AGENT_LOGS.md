@@ -32,7 +32,7 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
   - `pytest`
   - `pytest-django`
   - `mypy`
-  - `psycopg2-binary`
+  - `psycopg`
   - `pillow`
   - `boto3`
   - `requests`
@@ -43,7 +43,8 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
 ### Database
 
 - Configured the project to use PostgreSQL with `psycopg2-binary`.
-- Implemented ParadeDB search functionality with a custom `SearchManager`.
+- Implemented ParadeDB search functionality with a custom `SearchManager` in `apps/core/search.py`.
+- Added a placeholder for analytics in `apps/core/analytics.py`.
 
 ### Caching
 
@@ -72,6 +73,17 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
 ### Models
 
 - Created abstract base models `BaseModel` and `SoftDeleteModel` for common fields and soft delete functionality.
+
+## API
+
+- Implemented the `api` app using Django REST Framework.
+- Created `UserSerializer` and `UserViewSet` for user API endpoints.
+
+## Authentication & Authorization
+
+- Included `allauth.urls` for user registration, login/logout, and password reset.
+- Configured OIDC-based SSO using `allauth.socialaccount.providers.openid_connect`.
+- Implemented 2FA using `allauth.mfa`.
 
 ## Frontend
 
@@ -110,5 +122,35 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
 
 ## Containerization
 
-- Created a `docker-compose.yml` file to define the application stack (web, database, cache, broker, worker).
-- Created a `Dockerfile` to build the web service.
+- Created a `docker-compose.yml` file to define the application stack (web, database, cache, broker, worker) for consistent local development.
+- Created a `Dockerfile` to build the web service, including frontend build steps and optimized for Docker environment.
+
+## Additional Implementations and Refinements
+
+## Refactoring and Bug Fixes
+
+- Fixed duplicated `DEFAULT_AUTO_FIELD` and `Allauth MFA Settings` in `config/settings/base.py`.
+- Consolidated `STATIC_URL` and related static file settings in `config/settings/base.py`.
+
+## Missing/Incomplete Items Implemented
+
+### Real-time/WebSockets
+
+- Implemented `django-channels` for WebSockets.
+
+### Media Processing
+
+- Configured `django-imagekit` usage with `UserProfile` model.
+
+### API Authentication
+
+- Set up DRF authentication using `rest_framework.authtoken`.
+
+### Performance & Optimization
+
+- Set up `django-debug-toolbar`.
+
+### CI/CD Pipeline
+
+- Integrated `ruff` and `mypy` into the CI pipeline via `Makefile` commands.
+- Added Docker image build to the CI pipeline, with deployment steps as placeholders (commented out as per user's instruction for CI-only).

@@ -17,5 +17,11 @@ jobs:
       run: make install-py
     - name: Install frontend dependencies
       run: make install-js
+    - name: Run lint
+      run: make lint
     - name: Run tests
       run: make test
+    - name: Build Docker image
+      run: make docker-build
+    # - name: Deploy
+    #   run: make deploy

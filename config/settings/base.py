@@ -31,12 +31,17 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.openid_connect",
+    "allauth.mfa",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
     "django_vite",
     "imagekit",
     "django_action_cable",
+    "channels",
     "anymail",
+    "debug_toolbar",
     # Local Apps
     "apps.core",
     "apps.users",
@@ -45,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware", # Debug Toolbar
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -57,9 +63,30 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",  # Allauth
 ]
 
+# Django REST Framework Settings
+# ------------------------------------------------------------------------------
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+}
+
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
+        "CONFIG": {
+            "hosts": [env("REDIS_URL")],
+        },
+    },
+}
 
 TEMPLATES = [
     {
@@ -111,6 +138,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
+# ------------------------------------------------------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # For production 'collectstatic'
 STATICFILES_DIRS = [
@@ -118,17 +146,22 @@ STATICFILES_DIRS = [
 ]
 
 # Django-Vite Settings
+# ------------------------------------------------------------------------------
 DJANGO_VITE_ASSETS_PATH = BASE_DIR / "static" / "dist"
 DJANGO_VITE_DEV_MODE = DEBUG
 DJANGO_VITE_DEV_SERVER_HOST = "localhost"
 DJANGO_VITE_DEV_SERVER_PORT = 5173
 
 # Media files (User uploads)
-# Media files (User uploads)
 # ------------------------------------------------------------------------------
-# Default primary key field type
-# https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Debug Toolbar
+# ------------------------------------------------------------------------------
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # S3 Storage Settings
 # ------------------------------------------------------------------------------
@@ -140,7 +173,8 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 AWS_LOCATION = 'static'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+# STATIC_URL is already defined above, this is for S3 static files
+# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 
 STORAGES = {
     "default": {
@@ -152,9 +186,11 @@ STORAGES = {
 }
 
 # Email
+# ------------------------------------------------------------------------------
 EMAIL_BACKEND = "anymail.backends.postmark.EmailBackend"
 
 # Cache and Celery
+# ------------------------------------------------------------------------------
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -168,6 +204,7 @@ CELERY_BROKER_URL = env("RABBITMQ_URL")
 CELERY_RESULT_BACKEND = env("REDIS_URL")
 
 # Anymail
+# ------------------------------------------------------------------------------
 ANYMAIL = {
     "POSTMARK_SERVER_TOKEN": env("POSTMARK_SERVER_TOKEN"),
 }
@@ -190,6 +227,10 @@ sentry_sdk.init(
     send_default_pii=True
 )
 
+# ImageKit
+# ------------------------------------------------------------------------------
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic'
 
 # Default primary key field type
+# https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
