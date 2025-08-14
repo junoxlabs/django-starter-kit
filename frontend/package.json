@@ -1,0 +1,25 @@
+{
+  "name": "django-starter-kit-frontend",
+  "version": "1.0.0",
+  "description": "Frontend dependencies for the Django Starter Kit",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vite": "^5.0.0",
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo": "^8.0.0-beta.2",
+    "gsap": "^3.12.5"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "daisyui": "^5.0.50",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.12"
+  }
+}

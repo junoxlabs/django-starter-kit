@@ -1,9 +1,54 @@
 [project]
 name = "django-starter-kit"
 version = "0.1.0"
-description = "Add your description here"
+description = "A modern, high-performance Django 5.2 LTS starter kit with best practices"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "django==5.2",
+    "djangorestframework>=3.15.0",
+    "django-environ>=0.11.2",
+    "django-allauth>=0.60.0",
+    "django-vite>=3.0.0",
+    "django-imagekit>=5.0.0",
+    "django-storages>=1.14.0",
+    "django-anymail>=10.0",
+    "django-actioncable>=0.1.0",
+    "django-cors-headers>=4.3.0",
+    "django-redis>=5.3.0",
+    "whitenoise>=6.6.0",
+    "celery>=5.3.0",
+    "ruff>=0.12.0",
+    "sentry-sdk>=1.40.0",
+    "opentelemetry-sdk>=1.20.0",
+    "opentelemetry-instrumentation-django",
+    "opentelemetry-instrumentation-celery",
+    "pytest>=7.4.0",
+    "pytest-django>=4.5.0",
+    "mypy>=1.8.0",
+    "psycopg>=3.*.*",
+    "pillow>=10.0.0",
+    "boto3>=1.30.0",
+    "requests>=2.31.0",
+    "amqp>=5.1.0",
 ]
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.mypy_django_plugin]
+django_settings_module = "config.settings.base"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.dev"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+testpaths = ["."]
