@@ -1,0 +1,81 @@
+# docker-compose.yml
+# For development environment
+
+version: "3.8"
+
+services:
+  db:
+    image: public.ecr.aws/pardi/paradedb:v0.4.1
+    container_name: django_db
+    environment:
+      - POSTGRES_DB=app_db
+      - POSTGRES_USER=app_user
+      - POSTGRES_PASSWORD=securepassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  cache:
+    image: memcached:1.6-alpine
+    container_name: django_cache
+    ports:
+      - "11211:11211"
+
+  broker:
+    image: rabbitmq:3.13-management-alpine
+    container_name: django_broker
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672" # AMQP port
+      - "15672:15672" # Management UI
+
+  web:
+    build: .
+    container_name: django_web
+    command: >
+      sh -c "python manage.py migrate && 
+             granian --interface asgi --host 0.0.0.0 --port 8000 config.asgi:application --reload"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+      - "5173:5173" # For Vite HMR
+    environment:
+      - DATABASE_URL=postgres://app_user:securepassword@db:5432/app_db
+      - CACHE_URL=memcache://cache:11211
+      - BROKER_URL=amqp://guest:guest@broker:5672//
+      - SECRET_KEY=your-development-secret-key # Change this
+      - DEBUG=True
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_started
+      broker:
+        condition: service_started
+
+  worker:
+    build: .
+    command: >
+      sh -c "celery -A config worker -l INFO"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgres://app_user:securepassword@db:5432/app_db
+      - CACHE_URL=memcache://cache:11211
+      - BROKER_URL=amqp://guest:guest@broker:5672//
+      - SECRET_KEY=your-development-secret-key
+      - DEBUG=True
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
