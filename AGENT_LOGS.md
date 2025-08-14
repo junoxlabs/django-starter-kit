@@ -107,3 +107,8 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
 
 - Set up a GitHub Actions CI/CD pipeline to run tests on push and pull requests.
 - Created a `Makefile` to standardize commands.
+
+## Containerization
+
+- Created a `docker-compose.yml` file to define the application stack (web, database, cache, broker, worker).
+- Created a `Dockerfile` to build the web service.
