@@ -1,10 +1,18 @@
-.PHONY: install-py install-js test
+MAKEFLAG := -j 4
+
+.PHONY: install i install-py install-js test
+
+install i: install-py install-js
+	@echo "Installation complete. You can now run the project."
 
 install-py:
-	uv install
+	uv sync
 
 install-js:
-	cd frontend && bun install
+	cd frontend && bun --bun install
+
+clean:
+	rm -rf .venv frontend/node_modules
 
 lint:
 	uv run ruff check .
