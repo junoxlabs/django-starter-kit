@@ -59,7 +59,7 @@ All Python dependencies are managed by **`uv`** via a single `pyproject.toml` fi
 
 A modular structure is mandated to ensure a clean separation of concerns.
 
-- **`config/`**: The core Django project directory containing `settings/`, `urls.py`, and `asgi.py`. Settings are split into `base.py`, `development.py`, and `production.py`.
+- **`config/`**: The core Django project directory containing `settings/`, `urls.py`, and `asgi.py`. Settings are split into `base.py`, `dev.py`, and `production.py`.
 - **`frontend`**: Manages all frontend assets. Its sole purpose is to house the Vite build process, source files (`src/`), and load compiled assets (/dist) into templates.
 - **`templates/`**: Templates directory for all apps.
 - **`apps/`**: A top-level directory containing all custom applications.

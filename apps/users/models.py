@@ -68,24 +68,3 @@ class UserProfile(BaseModel):
         return self.user.username
 
 
-def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return f"users/user_{instance.user.id}/{filename}"
-
-
-class UserProfile(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    avatar = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-    avatar_thumbnail = ImageSpecField(
-        source="avatar",
-        processors=[ResizeToFill(100, 100)],
-        format="JPEG",
-        options={"quality": 60},
-    )
-
-    class Meta:
-        verbose_name = _("User Profile")
-        verbose_name_plural = _("User Profiles")
-
-    def __str__(self):
-        return self.user.username

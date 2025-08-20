@@ -36,6 +36,17 @@ test:
 docker-build:
 	docker build -t django-starter-kit .
 
+### DEV ###
+.PHONY: dev
+dev: django-dev
+
+.PHONY: django-dev
+django-dev:
+	uv run granian --reload --interface asginl --workers 1 --runtime-threads 2 config.asgi:application
+
+
+
+
 # deploy:
 # 	# This target is for deployment, which is not part of the automated CI/CD pipeline.
 # 	# Add your deployment commands here if you need to deploy manually.

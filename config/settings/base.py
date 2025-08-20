@@ -3,9 +3,22 @@
 import os
 from pathlib import Path
 import environ
+import dj_database_url
 
-# Initialize django-environ
-env = environ.Env(DEBUG=(bool, False))
+# Initialize django-environ with default values
+env = environ.Env(
+    DEBUG=(bool, False),
+    SECRET_KEY=(str, "django-insecure-development-key-for-local-use-only"),
+    ALLOWED_HOSTS=(list, []),
+    DATABASE_URL=(str, "sqlite:///db.sqlite3"),
+    REDIS_URL=(str, "redis://localhost:6379"),
+    RABBITMQ_URL=(str, "amqp://guest:guest@localhost:5672/"),
+    AWS_ACCESS_KEY_ID=(str, ""),
+    AWS_SECRET_ACCESS_KEY=(str, ""),
+    AWS_STORAGE_BUCKET_NAME=(str, ""),
+    POSTMARK_SERVER_TOKEN=(str, ""),
+    SENTRY_DSN=(str, ""),
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -20,6 +33,11 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 # Application definition
 INSTALLED_APPS = [
+    # Local Apps
+    "apps.core",
+    "apps.users",
+    "apps.api",
+    # Django Built-in
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -32,25 +50,21 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.openid_connect",
-    "allauth.mfa",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.apple",
+    "allauth.socialaccount.providers.microsoft",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
     "django_vite",
     "imagekit",
-    "django_action_cable",
     "channels",
     "anymail",
     "debug_toolbar",
-    # Local Apps
-    "apps.core",
-    "apps.users",
-    "apps.api",
-    "pages",
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware", # Debug Toolbar
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug Toolbar
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -70,9 +84,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
 ROOT_URLCONF = "config.urls"
@@ -106,7 +118,11 @@ TEMPLATES = [
 
 # Database
 DATABASES = {
-    "default": env.db(),
+    "default": dj_database_url.config(
+        default=env("DATABASE_URL"),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Authentication
@@ -168,11 +184,11 @@ INTERNAL_IPS = [
 AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
+    "CacheControl": "max-age=86400",
 }
-AWS_LOCATION = 'static'
+AWS_LOCATION = "static"
 # STATIC_URL is already defined above, this is for S3 static files
 # STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 
@@ -224,12 +240,12 @@ sentry_sdk.init(
         RedisIntegration(),
     ],
     traces_sample_rate=1.0,
-    send_default_pii=True
+    send_default_pii=True,
 )
 
 # ImageKit
 # ------------------------------------------------------------------------------
-IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = 'imagekit.cachefiles.strategies.Optimistic'
+IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = "imagekit.cachefiles.strategies.Optimistic"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
