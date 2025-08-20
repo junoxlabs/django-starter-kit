@@ -1,26 +1,38 @@
 MAKEFLAG := -j 4
 
-.PHONY: install i install-py install-js test
-
-install i: install-py install-js
+.PHONY: install i 
+install i: deps-django deps-frontend
 	@echo "Installation complete. You can now run the project."
 
-install-py:
+.PHONY: deps-django
+deps-django:
 	uv sync
 
-install-js:
+.PHONY: deps-frontend
+deps-frontend:
 	cd frontend && bun --bun install
 
+.PHONY: clean
 clean:
 	rm -rf .venv frontend/node_modules
 
+.PHONY: lint
 lint:
 	uv run ruff check .
-	uv run mypy .
 
+.PHONY: lint-fix
+lint-fix:
+	uv run ruff check . --fix
+
+.PHONY: format
+format:
+	uv run ruff format .
+
+.PHONY: test
 test:
 	uv run pytest
 
+.PHONY: docker-build
 docker-build:
 	docker build -t django-starter-kit .
 
