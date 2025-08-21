@@ -4,6 +4,10 @@ import os
 from pathlib import Path
 import environ
 import dj_database_url
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 # Initialize django-environ with default values
 env = environ.Env(
@@ -163,10 +167,13 @@ STATICFILES_DIRS = [
 
 # Django-Vite Settings
 # ------------------------------------------------------------------------------
-DJANGO_VITE_ASSETS_PATH = BASE_DIR / "static" / "dist"
-DJANGO_VITE_DEV_MODE = DEBUG
-DJANGO_VITE_DEV_SERVER_HOST = "localhost"
-DJANGO_VITE_DEV_SERVER_PORT = 5173
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": DEBUG,
+        "dev_server_host": "localhost",
+        "dev_server_port": 5173,
+    }
+}
 
 # Media files (User uploads)
 # ------------------------------------------------------------------------------
@@ -194,12 +201,16 @@ AWS_LOCATION = "static"
 
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# Override default storage for media files if AWS credentials are provided
+if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
+    STORAGES["default"]["BACKEND"] = "storages.backends.s3boto3.S3Boto3Storage"
 
 # Email
 # ------------------------------------------------------------------------------
@@ -227,10 +238,6 @@ ANYMAIL = {
 
 # Sentry & OpenTelemetry
 # ------------------------------------------------------------------------------
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.celery import CeleryIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
 
 sentry_sdk.init(
     dsn=env("SENTRY_DSN"),

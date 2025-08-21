@@ -1,4 +1,4 @@
-MAKEFLAG := -j 4
+MAKEFLAGS += -j4
 
 .PHONY: install i 
 install i: deps-django deps-frontend
@@ -38,14 +38,17 @@ docker-build:
 
 ### DEV ###
 .PHONY: dev
-dev: django-dev
+dev: django-dev vite-dev
 
 .PHONY: django-dev
 django-dev:
-	uv run granian --reload --interface asginl --workers 1 --runtime-threads 2 config.asgi:application
+	uv run granian --reload --interface asginl --workers 1 config.asgi:application
 
+.PHONY: vite-dev
+vite-dev:
+	cd frontend && bun --bun run dev
 
-
+##########
 
 # deploy:
 # 	# This target is for deployment, which is not part of the automated CI/CD pipeline.

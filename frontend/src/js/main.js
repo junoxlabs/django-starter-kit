@@ -1,3 +1,6 @@
+// Import Vite modulepreload polyfill [django-vite docs]
+import "vite/modulepreload-polyfill";
+
 // import CSS styles
 import "../css/styles.css";
 

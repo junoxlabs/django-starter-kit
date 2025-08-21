@@ -2,7 +2,7 @@
   "name": "django-starter-kit-frontend",
   "version": "1.0.0",
   "description": "Frontend dependencies for the Django Starter Kit",
-  "main": "index.js",
+  "main": "./src/js/main.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build"
@@ -17,9 +17,9 @@
     "gsap": "^3.13.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.21",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.1.12",
     "daisyui": "^5.0.50",
-    "postcss": "^8.5.6",
     "tailwindcss": "^4.1.12"
   }
 }

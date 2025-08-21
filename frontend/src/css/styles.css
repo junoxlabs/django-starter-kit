@@ -1,2 +1,15 @@
+/*
+    Tell Tailwind where to find your HTML templates and JS files.
+    Paths are relative to this CSS file.
+*/
+@source "../js/**/*.{js,ts}";
+@source "../../../templates/**/*.html";
+
+/* Import the core Tailwind v4 engine */
 @import "tailwindcss";
+
+/* Load the Tailwind v4 plugins */
+@plugin "@tailwindcss/typography";
+
+/* Load the DaisyUI v5 plugin using the new v4 syntax */
 @plugin "daisyui";
