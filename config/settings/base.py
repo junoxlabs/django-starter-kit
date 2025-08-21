@@ -1,6 +1,7 @@
 ### config/settings/base.py
 
 import os
+import re
 from pathlib import Path
 import environ
 import dj_database_url
@@ -12,6 +13,7 @@ from sentry_sdk.integrations.redis import RedisIntegration
 # Initialize django-environ with default values
 env = environ.Env(
     DEBUG=(bool, False),
+    ENVIRONMENT=(str, "development"),
     SECRET_KEY=(str, "django-insecure-development-key-for-local-use-only"),
     ALLOWED_HOSTS=(list, []),
     DATABASE_URL=(str, "sqlite:///db.sqlite3"),
@@ -162,14 +164,23 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # For production 'collectstatic'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "frontend/dist",  # Vite build output
 ]
+
+
+# http://whitenoise.evans.io/en/stable/django.html#WHITENOISE_IMMUTABLE_FILE_TEST
+def immutable_file_test(path, url):
+    # Match vite (rollup)-generated hashes, à la, `some_file-CSliV9zW.js`
+    return re.match(r"^.+[.-][0-9a-zA-Z_-]{8,12}\..+$", url)
+
+
+WHITENOISE_IMMUTABLE_FILE_TEST = immutable_file_test
 
 # Django-Vite Settings
 # ------------------------------------------------------------------------------
 DJANGO_VITE = {
     "default": {
-        "dev_mode": DEBUG,
+        "dev_mode": True if env("ENVIRONMENT") == "development" else False,
         "dev_server_host": "localhost",
         "dev_server_port": 5173,
     }
@@ -257,3 +268,9 @@ IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = "imagekit.cachefiles.strategies.Optimistic
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Debug Toolbar Configuration
+# ------------------------------------------------------------------------------
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TEMPLATE_CONTEXT": True,
+}

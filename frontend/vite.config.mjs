@@ -5,8 +5,8 @@ import tailwindcss from "@tailwindcss/vite"; /* instead of @tailwindcss/postcss 
 export default defineConfig({
   base: "/static/", // base path to serve static assets
   build: {
-    outDir: "../static/dist",
-    manifest: true,
+    outDir: "./dist",
+    manifest: "manifest.json",
     rollupOptions: {
       input: {
         main: "/src/js/main.js",
