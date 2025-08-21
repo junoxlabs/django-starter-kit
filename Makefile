@@ -32,23 +32,63 @@ format:
 test:
 	uv run pytest
 
-.PHONY: docker-build
-docker-build:
-	docker build -t django-starter-kit .
 
-### DEV ###
+#### - DEV - #### --------------------------------------------------------------------------------
 .PHONY: dev
 dev: django-dev vite-dev
 
 .PHONY: django-dev
 django-dev:
-	uv run granian --reload --interface asginl --workers 1 config.asgi:application
+	uv run granian --reload \
+		--interface asgi \
+		--workers 2 \
+		--runtime-mode mt \
+		--loop uvloop \
+		--log-level debug \
+		config.asgi:application
+
+.PHONY: django-dev-prod dev-prod
+django-dev-prod dev-prod:
+	env ENVIRONMENT=production uv run granian --reload \
+		--interface asginl \
+		--workers 3 \
+		--runtime-mode mt \
+		--loop uvloop \
+		--log-level debug \
+		config.asgi:application
 
 .PHONY: vite-dev
 vite-dev:
 	cd frontend && bun --bun run dev
+## - END DEV - ## --------------------------------------------------------------------------------
 
-##########
+#### - build - #### ------------------------------------------------------------------------------
+.PHONY: vite-build
+vite-build:
+	cd frontend && bun --bun run build
+
+.PHONY: docker-build
+docker-build:
+	docker build -t django-starter-kit .
+## - END build - ## ------------------------------------------------------------------------------
+
+### - PROD - ### ---------------------------------------------------------------------------------
+.PHONY: collectstatic
+collectstatic:
+	uv run python manage.py collectstatic --no-input --clear
+
+.PHONY: start
+start:
+	uv run granian \
+		--interface asginl \
+		--workers 3 \
+		--runtime-mode mt \
+		--loop uvloop \
+		--host 0.0.0.0 \
+		--port 8000 \
+		config.asgi:application 
+
+## - END PROD - ## -------------------------------------------------------------------------------
 
 # deploy:
 # 	# This target is for deployment, which is not part of the automated CI/CD pipeline.
