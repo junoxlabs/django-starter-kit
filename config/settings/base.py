@@ -66,11 +66,9 @@ INSTALLED_APPS = [
     "imagekit",
     "channels",
     "anymail",
-    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",  # Debug Toolbar
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Whitenoise
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -191,12 +189,6 @@ DJANGO_VITE = {
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Debug Toolbar
-# ------------------------------------------------------------------------------
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-
 # S3 Storage Settings
 # ------------------------------------------------------------------------------
 AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
@@ -268,9 +260,3 @@ IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = "imagekit.cachefiles.strategies.Optimistic
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Debug Toolbar Configuration
-# ------------------------------------------------------------------------------
-DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TEMPLATE_CONTEXT": True,
-}

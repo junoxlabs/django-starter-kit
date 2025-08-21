@@ -47,16 +47,6 @@ django-dev:
 		--log-level debug \
 		config.asgi:application
 
-.PHONY: django-dev-prod dev-prod
-django-dev-prod dev-prod:
-	env ENVIRONMENT=production uv run granian --reload \
-		--interface asginl \
-		--workers 3 \
-		--runtime-mode mt \
-		--loop uvloop \
-		--log-level debug \
-		config.asgi:application
-
 .PHONY: vite-dev
 vite-dev:
 	cd frontend && bun --bun run dev
@@ -79,7 +69,7 @@ collectstatic:
 
 .PHONY: start
 start:
-	uv run granian \
+	env ENVIRONMENT=production uv run granian \
 		--interface asginl \
 		--workers 3 \
 		--runtime-mode mt \
