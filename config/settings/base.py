@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     # Third Party
+    "turbo_helper",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -79,6 +80,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "turbo_helper.middleware.TurboMiddleware",
     "allauth.account.middleware.AccountMiddleware",  # Allauth
 ]
 

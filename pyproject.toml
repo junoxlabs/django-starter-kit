@@ -36,6 +36,7 @@ dependencies = [
     "django-debug-toolbar>=6.0.0",
     "pyjwt>=2.10.0",
     "cryptography>=45.0.6",
+    "django-turbo-helper>=2.1.4",
 ]
 [tool.ruff]
 line-length = 88

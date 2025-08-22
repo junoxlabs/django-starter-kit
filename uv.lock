@@ -466,6 +466,7 @@ dependencies = [
     { name = "django-imagekit" },
     { name = "django-redis" },
     { name = "django-storages" },
+    { name = "django-turbo-helper" },
     { name = "django-vite" },
     { name = "djangorestframework" },
     { name = "granian", extra = ["reload", "uvloop"] },
@@ -501,6 +502,7 @@ requires-dist = [
     { name = "django-imagekit", specifier = ">=5.0.0" },
     { name = "django-redis", specifier = ">=5.3.0" },
     { name = "django-storages", specifier = ">=1.14.0" },
+    { name = "django-turbo-helper", specifier = ">=2.1.4" },
     { name = "django-vite", specifier = ">=3.1.0" },
     { name = "djangorestframework", specifier = ">=3.15.0" },
     { name = "granian", extras = ["reload", "uvloop"], specifier = ">=2.5.0" },
@@ -528,6 +530,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ff/d6/2e50e378fff0408d558f36c4acffc090f9a641fd6e084af9e54d45307efa/django_storages-1.14.6.tar.gz", hash = "sha256:7a25ce8f4214f69ac9c7ce87e2603887f7ae99326c316bc8d2d75375e09341c9", size = 87587, upload-time = "2025-04-02T02:34:55.103Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1f/21/3cedee63417bc5553eed0c204be478071c9ab208e5e259e97287590194f1/django_storages-1.14.6-py3-none-any.whl", hash = "sha256:11b7b6200e1cb5ffcd9962bd3673a39c7d6a6109e8096f0e03d46fab3d3aabd9", size = 33095, upload-time = "2025-04-02T02:34:53.291Z" },
+]
+
+[[package]]
+name = "django-turbo-helper"
+version = "2.1.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "django-actioncable" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/cc/7991dad4df0affa6bcd6b3441f450b9499944ef372442f6768a3bebb5a13/django_turbo_helper-2.1.4.tar.gz", hash = "sha256:55825bbe7b78c96200d09745e85d13bf8aed8456448ee905d061a427f2a3326f", size = 9936, upload-time = "2024-08-16T08:24:57.491Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/96/65/d469929a90e0493902ac5775cf1d1e5c1df30e0607a66f0aa8e2194da6fc/django_turbo_helper-2.1.4-py3-none-any.whl", hash = "sha256:9ef59eee4fdabccb76c82996d3fac3c656701538c6fe8a180f989bc3171ab11e", size = 13926, upload-time = "2024-08-16T08:24:56.303Z" },
 ]
 
 [[package]]

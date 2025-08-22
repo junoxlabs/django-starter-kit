@@ -20,3 +20,6 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 # Use console for emails
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Debug Toolbar Configuration
+DEBUG_TOOLBAR_CONFIG = {"ROOT_TAG_EXTRA_ATTRS": "data-turbo-permanent"}

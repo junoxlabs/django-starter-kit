@@ -8,10 +8,10 @@ import "../css/styles.css";
 import { gsap } from "gsap";
 
 // Import Turbo
-import * as Turbo from "@hotwired/turbo";
+import "@hotwired/turbo";
 
 // Disable Turbo Drive by default globally
-Turbo.session.drive = false;
+// Turbo.session.drive = false;
 
 // Import Stimulus
 import { Application } from "@hotwired/stimulus";
