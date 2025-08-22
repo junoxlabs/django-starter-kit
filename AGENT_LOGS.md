@@ -127,6 +127,12 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
 
 ## Additional Implementations and Refinements
 
+### Pages App Integration
+
+- Moved the `pages` app to the `apps` directory.
+- Added `apps.pages` to `INSTALLED_APPS` in `config/settings/base.py`.
+- Updated `config/urls.py` to reference `apps.pages.urls` instead of `pages.urls`.
+
 ## Refactoring and Bug Fixes
 
 - Fixed duplicated `DEFAULT_AUTO_FIELD` and `Allauth MFA Settings` in `config/settings/base.py`.

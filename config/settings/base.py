@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "apps.core",
     "apps.users",
     "apps.api",
+    "apps.pages",
     # Django Built-in
     "django.contrib.admin",
     "django.contrib.auth",
