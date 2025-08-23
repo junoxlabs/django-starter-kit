@@ -33,7 +33,39 @@ test:
 	uv run pytest
 
 
-#### - DEV - #### --------------------------------------------------------------------------------
+#### DOCKER DEV #### -----------------------------------------------------------------------------
+.PHONY: dev-up
+dev-up:
+	docker compose -f dev/docker-compose.dev.yml up --build -d
+
+.PHONY: dev-down dev-stop
+dev-down dev-stop:
+	docker compose -f dev/docker-compose.dev.yml down
+
+.PHONY: dev-clean
+dev-clean:
+	docker compose -f dev/docker-compose.dev.yml down -v
+
+.PHONY: dev-restart
+dev-restart:
+	make dev-down
+	make dev-up
+
+.PHONY: dev-logs
+dev-logs:
+	docker compose -f dev/docker-compose.dev.yml logs -f
+
+.PHONY: dev-ps
+dev-ps:
+	docker compose -f dev/docker-compose.dev.yml ps
+
+.PHONY: dev-shell
+dev-shell:
+	docker compose -f dev/docker-compose.dev.yml exec app bash
+
+## - END DOCKER DEV - ## -------------------------------------------------------------------------
+
+#### - LOCAL DEV - #### ---------------------------------------------------------------------------
 .PHONY: dev
 dev: django-dev vite-dev
 
@@ -45,14 +77,16 @@ django-dev:
 		--runtime-mode mt \
 		--loop uvloop \
 		--log-level debug \
+		--host 0.0.0.0 \
+		--port 8000 \
 		config.asgi:application
 
 .PHONY: vite-dev
 vite-dev:
-	cd frontend && bun --bun run dev
-## - END DEV - ## --------------------------------------------------------------------------------
+	cd frontend && bun --bun run dev --host 0.0.0.0 --port 5173
+## - END LOCAL DEV - ## ---------------------------------------------------------------------------
 
-#### - build - #### ------------------------------------------------------------------------------
+#### - BUILD - #### ------------------------------------------------------------------------------
 .PHONY: vite-build
 vite-build:
 	cd frontend && bun --bun run build
@@ -60,20 +94,20 @@ vite-build:
 .PHONY: docker-build
 docker-build:
 	docker build -t django-starter-kit .
-## - END build - ## ------------------------------------------------------------------------------
+## - END BUILD - ## -------------------------------------------------------------------------------
 
 ### - PROD - ### ---------------------------------------------------------------------------------
 .PHONY: collectstatic
 collectstatic:
 	uv run python manage.py collectstatic --no-input --clear
 
-.PHONY: start
-start:
+.PHONY: prod-start
+prod-start:
 	env ENVIRONMENT=production uv run granian \
 		--interface asginl \
 		--workers 3 \
 		--runtime-mode mt \
-		--loop uvloop \
+	--loop uvloop \
 		--host 0.0.0.0 \
 		--port 8000 \
 		config.asgi:application 

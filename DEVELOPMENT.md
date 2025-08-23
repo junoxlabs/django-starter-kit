@@ -6,7 +6,52 @@ This document provides in-depth guidance for developers working on or extending 
 
 ---
 
-### ## Architectural Philosophy
+## Docker Development Environment
+
+The project includes a complete Docker development environment with all necessary services:
+
+### Services Included:
+
+- **PostgreSQL** - Database server
+- **Redis** - Cache and session storage
+- **RabbitMQ** - Message broker for Celery
+- **MinIO** - S3-compatible object storage
+
+### Development Commands:
+
+```bash
+# Start development environment (detached)
+make dev-up
+
+# Stop development environment
+make dev-down
+
+# Follow container logs
+make dev-logs
+
+# Clean up containers and volumes
+make dev-clean
+
+# Restart development environment
+make dev-restart
+
+# Access container shell
+make dev-shell
+```
+
+### Directory Structure:
+
+```
+dev/
+├── Dockerfile          # Development Docker image definition
+├── docker-compose.dev.yml  # Development services configuration
+├── supervisord.conf    # Process management configuration
+└── init.sh            # Container initialization script
+```
+
+---
+
+## Architectural Philosophy
 
 The primary goal is **separation of concerns** and **developer velocity**.
 
@@ -16,7 +61,7 @@ The primary goal is **separation of concerns** and **developer velocity**.
 
 ---
 
-### ## Dependency Management
+## Dependency Management
 
 - **Python:** All Python dependencies are managed by `uv` in `pyproject.toml`.
 
@@ -27,21 +72,21 @@ The primary goal is **separation of concerns** and **developer velocity**.
 
 ---
 
-### ## Frontend Workflow with Vite
+## Frontend Workflow with Vite
 
 - **Development:** When you run `docker-compose up`, the Vite development server starts automatically and proxies requests from Django. It provides Hot Module Replacement (HMR) for near-instant updates in the browser as you edit CSS and JS files in `frontend/assets/`.
 - **Building for Production:** The `Dockerfile` for the production image contains a stage that runs `npm run build`. This command invokes Vite to compile, minify, and hash all frontend assets, placing the output in `static/dist/`. In production, Django uses these compiled files directly.
 
 ---
 
-### ## Database Conventions
+## Database Conventions
 
 - **Models:** All new models should inherit from `apps.core.models.BaseModel`. If the model represents data that should not be permanently deleted (e.g., users, orders), it should inherit from `apps.core.models.SoftDeleteModel`.
 - **Query Performance:** Always use `select_related` (for foreign keys/one-to-one) and `prefetch_related` (for many-to-many/reverse relations) in your querysets to prevent N+1 query problems. The Django Debug Toolbar is installed in development to help identify these issues.
 
 ---
 
-### ## CI/CD Pipeline
+## CI/CD Pipeline
 
 The `.github/workflows/ci.yml` pipeline automates quality checks on every push and pull request. It performs the following steps:
 
