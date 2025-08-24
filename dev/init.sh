@@ -1,12 +1,17 @@
 #!/bin/bash
 
-# Check if dependencies are already installed
-if [ ! -d "/app/.venv" ] || [ ! -d "/app/frontend/node_modules" ]; then
-    echo "Installing dependencies..."
-    make install
-else
-    echo "Dependencies already installed, skipping installation"
-fi
+echo "Starting application initialization..."
 
-# Start supervisord with uv
+# Change to the app directory
+cd /app
+
+# Install dependencies (let uv and bun handle caching)
+echo "Installing dependencies..."
+make install
+
+# Add node_modules/.bin to PATH for vite command
+export PATH="/app/frontend/node_modules/.bin:$PATH"
+
+echo "Starting supervisord..."
+# Start supervisord
 exec uv run supervisord -c /etc/supervisor/supervisord.conf

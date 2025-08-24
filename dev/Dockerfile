@@ -44,12 +44,12 @@ RUN mkdir -p /var/log/supervisor
 # copy supervisor configuration
 COPY dev/supervisord.conf /etc/supervisor/supervisord.conf
 
-# copy init script
-COPY dev/init.sh /app/init.sh
-RUN chmod +x /app/init.sh
+# copy init script to root directory (won't be overwritten by volume mount)
+COPY dev/init.sh /init.sh
+RUN chmod +x /init.sh
 
 # expose ports
 EXPOSE 8000 5173
 
 # start init script
-CMD ["/app/dev/init.sh"]
+CMD ["/init.sh"]

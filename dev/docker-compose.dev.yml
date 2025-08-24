@@ -79,8 +79,8 @@ services:
       - ENVIRONMENT=development
     volumes:
       - ..:/app
-      - /app/.venv
-      - /app/frontend/node_modules
+      - django_venv:/app/.venv
+      - frontend_node_modules:/app/frontend/node_modules
     ports:
       - "8000:8000" # Django
       - "5173:5173" # Vite
@@ -92,3 +92,5 @@ volumes:
   redis_dev:
   rabbitmq_data:
   minio_data:
+  django_venv:
+  frontend_node_modules:
