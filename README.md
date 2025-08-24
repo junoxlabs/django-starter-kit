@@ -11,17 +11,17 @@ This is a complete Django development environment that gives you everything you 
 ### Backend
 
 - **Django 5.2 LTS** - The latest stable version of the popular Python web framework
-- **PostgreSQL** - A reliable database (with ParadeDB for search features)
-- **Redis** - For caching and session storage
-- **RabbitMQ** - Message broker for background tasks
-- **MinIO** - S3-compatible file storage
+- **PostgreSQL 17** - A reliable database (with ParadeDB for search features)
+- **Redis 7 (valkey)** - For caching and session storage
+- **RabbitMQ 4** - Message broker for background tasks
+- **MinIO** - S3-compatible file storage for dev
 
 ### Frontend
 
-- **Hotwire** - Make your pages feel fast and modern without complex JavaScript
-- **Vite** - Super fast development server and build tool
-- **Tailwind CSS** - Utility-first CSS framework for styling
-- **Daisy UI** - Beautiful UI components that work with Tailwind
+- **Hotwire (Turbo 8 + Stimulus 3)** - Make your pages feel fast and modern without complex JavaScript
+- **Vite 5** - Super fast development server and build tool
+- **Tailwind CSS v4** - Utility-first CSS framework for styling
+- **Daisy UI 5** - Beautiful UI components that work with Tailwind
 
 ### Developer Tools
 

@@ -3,7 +3,8 @@
 
 services:
   db:
-    image: postgres:17-trixie
+    # image: postgres:17-trixie # if you need to use normal postgres image
+    image: paradedb/paradedb:0.18.0-pg17 # use latest version when possible
     container_name: django-db
     restart: unless-stopped
     environment:

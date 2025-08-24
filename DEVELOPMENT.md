@@ -12,10 +12,10 @@ The project includes a complete Docker development environment with all necessar
 
 ### Services Included:
 
-- **PostgreSQL** - Database server
-- **Redis** - Cache and session storage
-- **RabbitMQ** - Message broker for Celery
-- **MinIO** - S3-compatible object storage
+- **PostgreSQL (ParadeDB)** - Database
+- **Redis (valkey 7)** - Cache and session storage
+- **RabbitMQ 4** - Message broker for Celery
+- **MinIO (bitnami/minio:2025.4.22 -- last version with usable webui)** - S3-compatible object storage (TODO: find alternative of minio for dev environments)
 
 ### Development Commands:
 
