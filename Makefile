@@ -39,7 +39,7 @@ dev-up:
 	docker compose -f dev/docker-compose.dev.yml up --build -d
 
 .PHONY: dev-down dev-stop
-dev-down dev-stop:
+dev-down dev-stop stop:
 	docker compose -f dev/docker-compose.dev.yml down
 
 .PHONY: dev-clean
@@ -52,15 +52,15 @@ dev-restart:
 	make dev-up
 
 .PHONY: dev-logs
-dev-logs:
+dev-logs logs:
 	docker compose -f dev/docker-compose.dev.yml logs -f
 
 .PHONY: dev-ps
-dev-ps:
+dev-ps ps:
 	docker compose -f dev/docker-compose.dev.yml ps
 
 .PHONY: dev-shell
-dev-shell:
+dev-shell shell:
 	docker compose -f dev/docker-compose.dev.yml exec app bash
 
 ## - END DOCKER DEV - ## -------------------------------------------------------------------------
