@@ -23,12 +23,11 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
   - `django-cors-headers`
   - `django-redis`
   - `whitenoise`
-  - `celery`
+  - `dramatiq`
   - `ruff`
   - `sentry-sdk`
   - `opentelemetry-sdk`
   - `opentelemetry-instrumentation-django`
-  - `opentelemetry-instrumentation-celery`
   - `pytest`
   - `pytest-django`
   - `mypy`
@@ -52,7 +51,7 @@ This file documents the implementation of the Django 5.2 LTS Starter Kit.
 
 ### Task Queue
 
-- Configured Celery with RabbitMQ as the message broker.
+- Configured Dramatiq with RabbitMQ as the message broker.
 
 ### Email
 

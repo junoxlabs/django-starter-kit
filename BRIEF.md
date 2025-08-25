@@ -26,7 +26,7 @@ The architecture covers the backend structure, data modeling, frontend integrati
 The system is a modular monolithic web application built on the Django framework. While monolithic in codebase, its dependencies (database, cache, message broker) are decoupled services, enabling flexible deployment and scaling.
 
 - **Presentation Layer (Frontend):** Renders the user interface using Django's templating engine, styled with Tailwind CSS, and enhanced with Hotwire (Turbo + Stimulus) for a single-page application (SPA) feel without the complexity of a heavy JavaScript framework.
-- **Application Layer (Backend):** Contains the core business logic, managed by Django views, Django REST Framework (DRF) for APIs, and Celery for asynchronous tasks. It handles user requests, data processing, and routing.
+- **Application Layer (Backend):** Contains the core business logic, managed by Django views, Django REST Framework (DRF) for APIs, and Dramatiq for asynchronous tasks. It handles user requests, data processing, and routing.
 - **Data Layer:** Manages data persistence, caching, and search. This includes a primary relational database (**ParadeDB**) for structured data and full-text search, and an in-memory cache (**Redis**) for high-speed data access.
 
 ---
@@ -39,7 +39,7 @@ All Python dependencies are managed by **`uv`** via a single `pyproject.toml` fi
 - **API Framework:** Django REST Framework (DRF)
 - **Database:** ParadeDB (PostgreSQL 17 with search & analytics extensions)
 - **Cache:** Redis (valkey 7)
-- **Task Queue:** Celery + RabbitMQ (as the message broker)
+- **Task Queue:** Dramatiq + RabbitMQ (as the message broker)
 - **Python Tooling:** `uv` (package manager), `ruff` (linter/formatter), `mypy` (type checker), `pytest` (testing)
 - **Configuration:** `django-environ` (for managing settings via environment variables)
 - **Authentication:** `django-allauth` (for social auth, OIDC, and local accounts)
@@ -128,7 +128,7 @@ Templates are designed with **Hotwire** to enable partial page updates, minimizi
   - **Low-Level Cache API:** `django.core.cache` with **Memcached** as the backend for caching expensive computations or database query results.
   - **Template Fragment Caching:** `{% cache %}` tag for caching expensive-to-render but frequently accessed UI components.
 - **Database Queries:** Mandate the use of `select_related` and `prefetch_related` to prevent N+1 query problems. Use `django-debug-toolbar` in development to identify and optimize slow queries.
-- **Asynchronous Tasks:** Offload long-running or non-critical tasks (e.g., sending emails, processing data imports) to **Celery** to keep web requests fast and responsive.
+- **Asynchronous Tasks:** Offload long-running or non-critical tasks (e.g., sending emails, processing data imports) to **Dramatiq** to keep web requests fast and responsive.
 
 ---
 
@@ -142,8 +142,8 @@ Templates are designed with **Hotwire** to enable partial page updates, minimizi
   3.  **Building:** Build frontend assets (`vite build`) and the final Docker image.
   4.  **Deployment:** Push the image to a container registry and deploy to the hosting environment.
 - **Observability:**
-  - **Error Tracking:** **Sentry** SDK is integrated to capture and report exceptions in real-time from Django and Celery.
-  - **Performance Monitoring:** **OpenTelemetry** traces requests across the stack (Django, DRF, Celery, DB queries) and sends the data to Sentry for performance analysis and identifying bottlenecks.
+  - **Error Tracking:** **Sentry** SDK is integrated to capture and report exceptions in real-time from Django and Dramatiq.
+  - **Performance Monitoring:** **OpenTelemetry** traces requests across the stack (Django, DRF, Dramatiq, DB queries) and sends the data to Sentry for performance analysis and identifying bottlenecks.
 
 ---
 

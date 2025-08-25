@@ -14,7 +14,7 @@ The project includes a complete Docker development environment with all necessar
 
 - **PostgreSQL (ParadeDB)** - Database
 - **Redis (valkey 7)** - Cache and session storage
-- **RabbitMQ 4** - Message broker for Celery
+- **RabbitMQ 4** - Message broker for Dramatiq
 - **MinIO (bitnami/minio:2025.4.22 -- last version with usable webui)** - S3-compatible object storage (TODO: find alternative of minio for dev environments)
 
 ### Development Commands:

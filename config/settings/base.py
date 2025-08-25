@@ -7,7 +7,7 @@ import environ
 import dj_database_url
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.celery import CeleryIntegration
+
 from sentry_sdk.integrations.redis import RedisIntegration
 
 # Initialize django-environ with default values
@@ -16,9 +16,9 @@ env = environ.Env(
     ENVIRONMENT=(str, "development"),
     SECRET_KEY=(str, "django-insecure-development-key-for-local-use-only"),
     ALLOWED_HOSTS=(list, []),
-    DATABASE_URL=(str, "sqlite:///db.sqlite3"),
-    REDIS_URL=(str, "redis://localhost:6379"),
-    RABBITMQ_URL=(str, "amqp://guest:guest@localhost:5672/"),
+    DATABASE_URL=(str, "postgresql://postgres:postgres@db:5432/db"),
+    REDIS_URL=(str, "redis://redis:6379"),
+    RABBITMQ_URL=(str, "amqp://guest:guest@rabbitmq:5672/"),
     AWS_ACCESS_KEY_ID=(str, ""),
     AWS_SECRET_ACCESS_KEY=(str, ""),
     AWS_STORAGE_BUCKET_NAME=(str, ""),
@@ -39,6 +39,7 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
 # Application definition
 INSTALLED_APPS = [
+    "django_dramatiq",
     # Local Apps
     "apps.core",
     "apps.users",
@@ -222,7 +223,7 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
 # ------------------------------------------------------------------------------
 EMAIL_BACKEND = "anymail.backends.postmark.EmailBackend"
 
-# Cache and Celery
+# Cache
 # ------------------------------------------------------------------------------
 CACHES = {
     "default": {
@@ -233,8 +234,27 @@ CACHES = {
         },
     }
 }
-CELERY_BROKER_URL = env("RABBITMQ_URL")
-CELERY_RESULT_BACKEND = env("REDIS_URL")
+# Dramatiq
+# ------------------------------------------------------------------------------
+DRAMATIQ_BROKER = {
+    "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
+    "OPTIONS": {
+        "url": env("RABBITMQ_URL"),
+    },
+    "MIDDLEWARE": [
+        "dramatiq.middleware.Prometheus",
+        "dramatiq.middleware.AgeLimit",
+        "dramatiq.middleware.TimeLimit",
+        "dramatiq.middleware.Callbacks",
+        "dramatiq.middleware.Retries",
+        "django_dramatiq.middleware.DbConnectionsMiddleware",
+        "django_dramatiq.middleware.AdminMiddleware",
+    ]
+}
+
+# Defines which database should be used to persist Task objects when the
+# AdminMiddleware is enabled. The default value is "default".
+DRAMATIQ_TASKS_DATABASE = "default"
 
 # Anymail
 # ------------------------------------------------------------------------------
@@ -249,7 +269,6 @@ sentry_sdk.init(
     dsn=env("SENTRY_DSN"),
     integrations=[
         DjangoIntegration(),
-        CeleryIntegration(),
         RedisIntegration(),
     ],
     traces_sample_rate=1.0,

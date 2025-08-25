@@ -67,7 +67,7 @@ dev-shell shell:
 
 #### - LOCAL DEV - #### ---------------------------------------------------------------------------
 .PHONY: dev
-dev: django-dev vite-dev
+dev: django-dev vite-dev worker-dev
 
 .PHONY: django-dev
 django-dev:
@@ -84,6 +84,10 @@ django-dev:
 .PHONY: vite-dev
 vite-dev:
 	cd frontend && bun --bun run dev --host 0.0.0.0 --port 5173
+
+.PHONY: worker-dev
+worker-dev:
+	uv run python manage.py rundramatiq --reload-use-polling
 ## - END LOCAL DEV - ## ---------------------------------------------------------------------------
 
 #### - BUILD - #### ------------------------------------------------------------------------------

@@ -42,7 +42,7 @@ services:
 
   worker:
     build: .
-    command: "uv run celery -A config.celery_app worker -l info"
+    command: "uv run python manage.py rundramatiq"
     volumes:
       - .:/app
     depends_on:
